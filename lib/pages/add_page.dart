@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:note_app/data/datasources/local_datasource.dart';
 
 import '../data/models/note.dart';
+import 'home_page.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -12,6 +13,7 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   final _formKey = GlobalKey<FormState>();
+
   final TextEditingController titleController = TextEditingController();
   final TextEditingController contentController = TextEditingController();
 
@@ -69,12 +71,14 @@ class _AddPageState extends State<AddPage> {
                       titleController.clear();
                       contentController.clear();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Note Berhasil Ditambahkan!"),
-                          backgroundColor: Colors.green,
+                         SnackBar(
+                          content: const Text("Note Berhasil Ditambahkan!"),
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                         )
                       );
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                        return const HomePage();
+                      }));
                     }
                   },
                   child: const Text("Submit"),

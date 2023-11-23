@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) {
-                    return const DetailPage();
+                    return DetailPage( note: notes[index]);
                   },
                 ),
               );
@@ -118,10 +118,11 @@ class _HomePageState extends State<HomePage> {
         itemCount: notes.length,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
+        onPressed: () async {
+          await Navigator.push(context, MaterialPageRoute(builder: (context) {
             return const AddPage();
           }));
+          getNotes();
         },
         child: const Icon(Icons.add),
       ),
