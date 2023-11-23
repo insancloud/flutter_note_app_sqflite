@@ -4,7 +4,7 @@ import 'package:sqflite/sqflite.dart';
 import '../models/note.dart';
 
 class LocalDatasource {
-  final String dbName = "notes_local.db";
+  final String dbName = "notes_local01.db";
   final String tableName = "notes";
 
   Future<Database> _openDatabase() async {
@@ -21,14 +21,42 @@ class LocalDatasource {
             title TEXT,
             content TEXT,
             createdAt TEXT
-          )'''
+          )''',
         );
       },
     );
   }
-}
 
+  Future<int> insertNote(Note note) async {
+    final db = await _openDatabase();
+    return await db.insert(tableName, note.toMap());
+  }
 
-Future<int> insertNote(Note note)  async{
-  final db = await _openDatabase();
+  Future<List<Note>> getNotes() async {
+    final db = await _openDatabase();
+    final maps = await db.query(tableName, orderBy: 'createdAt DESC');
+    return List.generate(
+      maps.length,
+      (i) {
+        return Note.fromMap(maps[i]);
+      },
+    );
+  }
+
+  Future<Note> getById(int id) async {
+    final db = await _openDatabase();
+    final maps = await db.query(tableName, where: 'i d = ?', whereArgs: [id]);
+    return Note.fromMap(maps.first);
+  }
+
+  Future<int> updateNoteById(Note note) async {
+    final db = await _openDatabase();
+    return await db
+        .update(tableName, note.toMap(), where: 'id = ?', whereArgs: [note.id]);
+  }
+
+  Future<int> deleteNoteById(int id) async {
+    final db = await _openDatabase();
+    return await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+  }
 }

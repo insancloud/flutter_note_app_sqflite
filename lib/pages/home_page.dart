@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:note_app/pages/add_page.dart';
 import 'package:note_app/pages/detail_page.dart';
+import '../data/datasources/local_datasource.dart';
+import '../data/models/note.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +12,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Note> notes = [];
+  bool isLoading = false;
+
+  // Function Get all Notes
+  Future<void> getNotes() async {
+    setState(() {
+      isLoading = true;
+    });
+    notes = await LocalDatasource().getNotes();
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    getNotes();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +43,15 @@ class _HomePageState extends State<HomePage> {
         elevation: 2,
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      body: GridView.builder(
+      body:
+        isLoading ? const Center(
+          child: CircularProgressIndicator(),
+        ) 
+        :
+        notes.isEmpty ? const Center(
+          child: Text("Tidak ada catatan"),
+        ) :
+        GridView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -61,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Title",
+                           notes[index].title,
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge!
@@ -71,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                           height: 8,
                         ),
                         Text(
-                          "Konten",
+                          notes[index].content,
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge!
@@ -85,7 +115,7 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         },
-        itemCount: 13,
+        itemCount: notes.length,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

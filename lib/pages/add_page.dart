@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:note_app/data/datasources/local_datasource.dart';
+
+import '../data/models/note.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -57,7 +60,21 @@ class _AddPageState extends State<AddPage> {
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      
+                      Note note = Note(
+                        title :titleController.text,
+                        content :contentController.text,
+                        createdAt :DateTime.now(),
+                      );
+                      LocalDatasource().insertNote(note);
+                      titleController.clear();
+                      contentController.clear();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Note Berhasil Ditambahkan!"),
+                          backgroundColor: Colors.green,
+                        )
+                      );
+                      Navigator.pop(context);
                     }
                   },
                   child: const Text("Submit"),
