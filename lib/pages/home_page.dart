@@ -100,11 +100,12 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           height: 8,
                         ),
+                        const Divider(),
                         Text(
                           notes[index].content,
                           style: Theme.of(context)
                               .textTheme
-                              .titleLarge!
+                              .titleSmall!
                               .copyWith(color: Colors.white),
                         ),
                       ],
