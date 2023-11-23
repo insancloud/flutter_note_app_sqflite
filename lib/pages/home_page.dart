@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                            notes[index].title,
                           style: Theme.of(context)
                               .textTheme
-                              .titleLarge!
+                              .titleMedium!
                               .copyWith(color: Colors.white),
                         ),
                         const SizedBox(
